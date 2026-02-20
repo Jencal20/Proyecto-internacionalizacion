@@ -1,167 +1,69 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title th:text="#{page.title.admin}">Página de Administrador</title>
+    <meta charset="UTF-8">
+    <title>Página de Administrador</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            max-width: 900px;
+            max-width: 800px;
             margin: 50px auto;
             padding: 20px;
-            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
-            min-height: 100vh;
+            background-color: #ffebee;
         }
-        .card {
+        .container {
             background: white;
-            padding: 50px;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-align: center;
         }
         h1 {
-            color: #dc3545;
-            border-left: 8px solid #dc3545;
-            padding-left: 25px;
-            margin-bottom: 30px;
-            font-size: 2.5em;
-        }
-        .access-info {
-            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
-            padding: 25px;
-            border-radius: 15px;
-            margin: 25px 0;
-            border: 3px solid #dc3545;
-        }
-        .admin-info {
-            background: linear-gradient(135deg, #e2e3e5, #d6d8db);
-            padding: 25px;
-            border-radius: 12px;
-            margin: 20px 0;
+            color: #c62828;
         }
         .btn {
             display: inline-block;
-            padding: 12px 30px;
-            background: linear-gradient(135deg, #dc3545, #c82333);
+            padding: 10px 20px;
+            margin: 10px;
+            background: #c62828;
             color: white;
             text-decoration: none;
-            border-radius: 8px;
-            margin-right: 15px;
-            margin-bottom: 15px;
-            font-weight: bold;
-            transition: transform 0.2s;
-            border: none;
-            cursor: pointer;
+            border-radius: 5px;
         }
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        .logout-form {
+            display: inline;
         }
-        .secondary-btn {
-            background: linear-gradient(135deg, #6c757d, #545b62);
-        }
-        .language-selector {
-            margin-bottom: 30px;
-            text-align: center;
-        }
-        .lang-btn {
+        .logout-btn {
             padding: 10px 20px;
-            margin: 0 10px;
-            background: #2196F3;
+            background: #f44336;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
         }
-        .lang-btn:hover {
-            background: #1976D2;
-        }
-        .lang-btn.active {
-            background: #0D47A1;
-        }
-        .features {
-            background: linear-gradient(135deg, #f8f9fa, #e2e3e5);
-            padding: 25px;
-            border-radius: 12px;
-            margin: 25px 0;
-        }
-        .features h3 {
-            color: #495057;
-            margin-top: 0;
-        }
-        .features ul {
-            padding-left: 20px;
-        }
-        .features li {
-            margin: 10px 0;
-            color: #555;
+        .admin-info {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
         }
     </style>
 </head>
 <body>
-    <div class="card">
-        <!-- Selector de idioma -->
-        <div class="language-selector">
-            <a th:href="@{/change-language(lang='es')}" 
-               class="lang-btn" 
-               th:classappend="${#locale.language == 'es'} ? 'active'">
-                🇪🇸
-            </a>
-            <a th:href="@{/change-language(lang='en')}" 
-               class="lang-btn"
-               th:classappend="${#locale.language == 'en'} ? 'active'">
-                🇺🇸
-            </a>
-            <a th:href="@{/change-language(lang='pt')}" 
-               class="lang-btn"
-               th:classappend="${#locale.language == 'pt'} ? 'active'">
-                🇵🇹
-            </a>
+    <div class="container">
+        <h1>⚙️ Página de Administrador</h1>
+        
+        <div class="admin-info">
+            <p><strong>Usuario:</strong> <span th:text="${#authentication.name}">admin</span></p>
+            <p><strong>Rol:</strong> ADMINISTRADOR</p>
         </div>
         
-        <h1>⚙️ <span th:text="#{page.title.admin}">PÁGINA DE ADMINISTRADOR</span></h1>
+        <p>Bienvenido al panel de administración. Solo administradores pueden ver esto.</p>
         
-        <div class="access-info">
-            <strong>⚠️ <span th:text="#{admin.access}">ACCESO MUY RESTRINGIDO</span></strong><br>
-            <span th:text="#{admin.roleexclusive}">Requiere rol ADMIN exclusivamente</span>
-        </div>
-        
-        <!-- Información del administrador -->
-        <div th:if="${#authentication != null and #authentication.isAuthenticated()}">
-            <div class="admin-info">
-                <p><strong>👑 <span th:text="#{welcome}">Bienvenido</span>:</strong> 
-                   <span th:text="${#authentication.name}">admin</span></p>
-                <p><strong>🎖️ <span th:text="#{admin.role}">Rol</span>:</strong> ADMINISTRADOR</p>
-                <p><strong>🔓 <span th:text="#{admin.privileges}">Privilegios</span>:</strong> 
-                   <span th:text="#{admin.fullaccess}">Acceso completo al sistema</span></p>
-            </div>
-        </div>
-        
-        <div class="features">
-            <h3>🔧 <span th:text="#{admin.features}">Funciones de Administrador:</span></h3>
-            <ul>
-                <li><span th:text="#{admin.feature1}">Gestión de usuarios del sistema</span></li>
-                <li><span th:text="#{admin.feature2}">Configuración de seguridad</span></li>
-                <li><span th:text="#{admin.feature3}">Monitoreo de actividades</span></li>
-                <li><span th:text="#{admin.feature4}">Acceso a todos los recursos</span></li>
-            </ul>
-        </div>
-        
-        <p><strong th:text="#{admin.admin}">¡Eres administrador del sistema!</strong></p>
-        <p th:text="#{admin.highsecurity}">Esta es la página con el nivel más alto de seguridad.</p>
-        
-        <div style="margin-top: 40px;">
-            <a href="/" class="btn">
-                🏠 <span th:text="#{button.home}">Volver al Inicio</span>
-            </a>
-            <a href="/user" class="btn secondary-btn">
-                👤 <span th:text="#{button.userpage}">Ir a Página de Usuario</span>
-            </a>
-            
-            <form style="display:inline;" th:action="@{/logout}" method="post">
-                <button type="submit" class="btn secondary-btn">
-                    🚪 <span th:text="#{button.logout}">Cerrar Sesión</span>
-                </button>
+        <div>
+            <a href="/" class="btn">Volver al Inicio</a>
+            <form class="logout-form" th:action="@{/logout}" method="post">
+                <button type="submit" class="logout-btn">Cerrar Sesión</button>
             </form>
         </div>
     </div>

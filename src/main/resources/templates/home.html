@@ -1,216 +1,186 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title th:text="#{page.title.home}">Página de Inicio</title>
+    <meta charset="UTF-8">
+    <title th:text="#{home.title}">Página de Inicio</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            max-width: 1000px;
+            max-width: 800px;
             margin: 50px auto;
             padding: 20px;
             background-color: #f5f5f5;
         }
         .container {
             background: white;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-align: center;
         }
         h1 {
             color: #333;
-            border-bottom: 3px solid #4CAF50;
-            padding-bottom: 15px;
-            margin-bottom: 30px;
+        }
+        .language-selector {
+            margin: 20px 0;
+        }
+        .lang-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 0 5px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            cursor: pointer;
+            border: none;
+        }
+        .lang-btn:hover {
+            background: #0056b3;
+        }
+        .lang-btn.active {
+            background: #0056b3;
+            font-weight: bold;
         }
         .menu {
-            margin: 25px 0;
+            margin: 30px 0;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
         }
         .menu a {
+            display: block;
             padding: 15px;
-            background: linear-gradient(135deg, #4CAF50, #45a049);
+            background: #4CAF50;
             color: white;
             text-decoration: none;
-            border-radius: 8px;
-            text-align: center;
+            border-radius: 5px;
             font-weight: bold;
-            transition: transform 0.2s, box-shadow 0.2s;
-            border: none;
-            font-size: 16px;
         }
         .menu a:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            background: linear-gradient(135deg, #45a049, #3d8b40);
-        }
-        .info {
-            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
-            padding: 20px;
-            border-radius: 10px;
-            margin: 25px 0;
-            border-left: 5px solid #4CAF50;
-        }
-        .credential {
-            background: #fff3cd;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 5px;
-            border-left: 4px solid #ffc107;
-        }
-        .language-selector {
-            background: #e3f2fd;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 25px 0;
-            text-align: center;
-            border: 2px solid #2196F3;
-        }
-        .language-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 15px;
-            flex-wrap: wrap;
-        }
-        .lang-btn {
-            padding: 10px 25px;
-            background: #2196F3;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background 0.3s;
-            text-decoration: none;
-            display: inline-block;
-        }
-        .lang-btn:hover {
-            background: #1976D2;
-            text-decoration: none;
-            color: white;
-        }
-        .lang-btn.active {
-            background: #0D47A1;
-            box-shadow: 0 0 10px rgba(13, 71, 161, 0.5);
-        }
-        .footer {
-            text-align: center;
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid #ddd;
-            color: #666;
-            font-size: 14px;
+            background: #45a049;
         }
         .user-info {
-            background: #e8eaf6;
+            background: #e3f2fd;
             padding: 15px;
-            border-radius: 8px;
+            border-radius: 5px;
             margin: 20px 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        .logout-form {
-            display: inline;
-        }
         .logout-btn {
-            padding: 8px 20px;
+            padding: 8px 16px;
             background: #f44336;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-weight: bold;
         }
-        .logout-btn:hover {
-            background: #d32f2f;
+        .credentials {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            text-align: left;
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <h1 id="welcome-message" th:text="#{welcome}">Bienvenido</h1>
+        
         <!-- Selector de idioma -->
         <div class="language-selector">
-            <h3>🌍 <span th:text="#{language.title}">Idioma:</span></h3>
-            <div class="language-buttons">
-                <a th:href="@{/change-language(lang='es')}" 
-                   class="lang-btn" 
-                   th:classappend="${#locale.language == 'es'} ? 'active'">
-                    <span th:text="#{language.es}">🇪🇸 Español</span>
-                </a>
-                <a th:href="@{/change-language(lang='en')}" 
-                   class="lang-btn"
-                   th:classappend="${#locale.language == 'en'} ? 'active'">
-                    <span th:text="#{language.en}">🇺🇸 English</span>
-                </a>
-                <a th:href="@{/change-language(lang='pt')}" 
-                   class="lang-btn"
-                   th:classappend="${#locale.language == 'pt'} ? 'active'">
-                    <span th:text="#{language.pt}">🇵🇹 Português</span>
-                </a>
-            </div>
+            <button onclick="changeLanguage('es')" class="lang-btn" id="lang-es">🇪🇸 Español</button>
+            <button onclick="changeLanguage('en')" class="lang-btn" id="lang-en">🇺🇸 English</button>
+            <button onclick="changeLanguage('pt')" class="lang-btn" id="lang-pt">🇵🇹 Português</button>
         </div>
         
-        <h1 th:text="#{main.title}">🔐 Sistema de Seguridad Spring Boot</h1>
-        
-        <!-- Información del usuario si está logueado -->
-        <div th:if="${#authentication != null and #authentication.isAuthenticated()}">
-            <div class="user-info">
-                <div>
-                    <strong>✅ <span th:text="#{welcome}">Bienvenido</span>:</strong> 
-                    <span th:text="${#authentication.name}">usuario</span>
-                </div>
-                <form class="logout-form" th:action="@{/logout}" method="post">
-                    <button type="submit" class="logout-btn">
-                        🚪 <span th:text="#{button.logout}">Cerrar Sesión</span>
-                    </button>
-                </form>
-            </div>
+        <!-- Info de usuario (solo visible si está logueado) -->
+        <div th:if="${#authentication != null and #authentication.isAuthenticated()}" class="user-info">
+            <span>👤 <span th:text="${#authentication.name}">usuario</span></span>
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="logout-btn">Cerrar Sesión</button>
+            </form>
         </div>
         
-        <div class="info">
-            <p><strong th:text="#{main.subtitle}">✅ La aplicación está funcionando correctamente</strong></p>
-            <p th:text="#{main.select}">Selecciona una página para probar los diferentes niveles de acceso:</p>
-        </div>
-        
+        <!-- Menú de navegación -->
         <div class="menu">
-            <a href="/public">
-                🌐 <span th:text="#{button.publicpage}">Página Pública</span><br>
-                <small th:text="#{public.noauth}">(sin login)</small>
-            </a>
-            
-            <a href="/user">
-                👤 <span th:text="#{button.userpage}">Página de Usuario</span><br>
-                <small th:text="'(' + #{user.role} + ' USER ' + #{user.or} + ' ADMIN)'">(necesita USER o ADMIN)</small>
-            </a>
-            
-            <a href="/admin">
-                ⚙️ <span th:text="#{button.adminpage}">Página de Administrador</span><br>
-                <small th:text="'(' + #{admin.roleexclusive} + ')'">(solo ADMIN)</small>
-            </a>
-            
-            <a href="/login" th:if="${#authentication == null or !#authentication.isAuthenticated()}">
-                🔑 <span th:text="#{button.login}">Iniciar Sesión</span>
-            </a>
+            <a href="/public" id="public-link">🌐 Página Pública</a>
+            <a href="/user" id="user-link">👤 Página de Usuario</a>
+            <a href="/admin" id="admin-link">⚙️ Página de Admin</a>
+            <a th:if="${#authentication == null or !#authentication.isAuthenticated()}" 
+               href="/login" id="login-link">🔑 Iniciar Sesión</a>
         </div>
         
-        <div class="info">
-            <h3>📋 <span th:text="#{main.credentials}">Credenciales para probar:</span></h3>
-            <div class="credential">
-                <strong><span th:text="#{main.admin}">Administrador:</span></strong> 
-                "admin" / "admin123"
-            </div>
-            <div class="credential">
-                <strong><span th:text="#{main.user}">Usuario normal:</span></strong> 
-                "user" / "user123"
-            </div>
+        <!-- Credenciales de prueba -->
+        <div class="credentials">
+            <h3>🔐 Credenciales de prueba:</h3>
+            <p><strong>Admin:</strong> admin / admin123</p>
+            <p><strong>Usuario:</strong> user / user123</p>
         </div>
         
-        <div class="footer">
-            <p th:text="#{footer.text}">Spring Boot + Spring Security + Thymeleaf + Internacionalización</p>
-        </div>
+        <p id="footer-text" th:text="#{footer.text}">Spring Boot + Internacionalización</p>
     </div>
+
+    <script>
+        // Diccionario de traducciones
+        const homeTranslations = {
+            es: {
+                welcome: "Bienvenido al Sistema de Seguridad",
+                public: "🌐 Página Pública",
+                user: "👤 Página de Usuario",
+                admin: "⚙️ Página de Admin",
+                login: "🔑 Iniciar Sesión",
+                footer: "Spring Boot + Seguridad + Internacionalización"
+            },
+            en: {
+                welcome: "Welcome to the Security System",
+                public: "🌐 Public Page",
+                user: "👤 User Page",
+                admin: "⚙️ Admin Page",
+                login: "🔑 Login",
+                footer: "Spring Boot + Security + Internationalization"
+            },
+            pt: {
+                welcome: "Bem-vindo ao Sistema de Segurança",
+                public: "🌐 Página Pública",
+                user: "👤 Página do Usuário",
+                admin: "⚙️ Página do Admin",
+                login: "🔑 Iniciar Sessão",
+                footer: "Spring Boot + Segurança + Internacionalização"
+            }
+        };
+
+        function changeLanguage(lang) {
+            localStorage.setItem('appLanguage', lang);
+            
+            // Actualizar textos
+            document.getElementById('welcome-message').textContent = homeTranslations[lang].welcome;
+            document.getElementById('public-link').textContent = homeTranslations[lang].public;
+            document.getElementById('user-link').textContent = homeTranslations[lang].user;
+            document.getElementById('admin-link').textContent = homeTranslations[lang].admin;
+            
+            let loginLink = document.getElementById('login-link');
+            if (loginLink) {
+                loginLink.textContent = homeTranslations[lang].login;
+            }
+            
+            document.getElementById('footer-text').textContent = homeTranslations[lang].footer;
+            
+            // Actualizar botones activos
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById('lang-' + lang).classList.add('active');
+        }
+
+        // Cargar idioma guardado
+        window.onload = function() {
+            const savedLang = localStorage.getItem('appLanguage') || 'es';
+            changeLanguage(savedLang);
+        };
+    </script>
 </body>
 </html>

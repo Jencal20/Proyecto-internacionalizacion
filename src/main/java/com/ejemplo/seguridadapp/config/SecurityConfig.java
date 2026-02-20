@@ -19,10 +19,11 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+            .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/", "/public", "/css/**", "/error").permitAll()
-                .requestMatchers("/admin").hasRole("ADMIN")
+                .requestMatchers("/", "/public", "/login", "/css/**", "/js/**").permitAll()
                 .requestMatchers("/user").hasAnyRole("USER", "ADMIN")
+                .requestMatchers("/admin").hasRole("ADMIN")
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
@@ -33,9 +34,8 @@ public class SecurityConfig {
             .logout(logout -> logout
                 .permitAll()
                 .logoutSuccessUrl("/")
-            )
-            .csrf(csrf -> csrf.disable());
-
+            );
+        
         return http.build();
     }
 
@@ -43,13 +43,13 @@ public class SecurityConfig {
     public UserDetailsService userDetailsService() {
         UserDetails admin = User.builder()
             .username("admin")
-            .password(passwordEncoder().encode("admin000"))
+            .password(passwordEncoder().encode("admin123"))
             .roles("ADMIN")
             .build();
 
         UserDetails user = User.builder()
             .username("user")
-            .password(passwordEncoder().encode("user000"))
+            .password(passwordEncoder().encode("user123"))
             .roles("USER")
             .build();
 
