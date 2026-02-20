@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="#{page.title.user}">Página de Usuario</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #fff3cd, #ffecb3);
+            min-height: 100vh;
+        }
+        .card {
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #ff9800;
+            border-left: 8px solid #ff9800;
+            padding-left: 25px;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        .access-info {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+            border: 3px solid #ff9800;
+        }
+        .user-info {
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #ff9800, #f57c00);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-right: 15px;
+            margin-bottom: 15px;
+            font-weight: bold;
+            transition: transform 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .logout-btn {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+        }
+        .language-selector {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .lang-btn {
+            padding: 10px 20px;
+            margin: 0 10px;
+            background: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .lang-btn:hover {
+            background: #1976D2;
+        }
+        .lang-btn.active {
+            background: #0D47A1;
+        }
+        p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            color: #555;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <!-- Selector de idioma -->
+        <div class="language-selector">
+            <a th:href="@{/change-language(lang='es')}" 
+               class="lang-btn" 
+               th:classappend="${#locale.language == 'es'} ? 'active'">
+                🇪🇸
+            </a>
+            <a th:href="@{/change-language(lang='en')}" 
+               class="lang-btn"
+               th:classappend="${#locale.language == 'en'} ? 'active'">
+                🇺🇸
+            </a>
+            <a th:href="@{/change-language(lang='pt')}" 
+               class="lang-btn"
+               th:classappend="${#locale.language == 'pt'} ? 'active'">
+                🇵🇹
+            </a>
+        </div>
+        
+        <h1>👤 <span th:text="#{page.title.user}">PÁGINA DE USUARIO</span></h1>
+        
+        <div class="access-info">
+            <strong>🔐 <span th:text="#{user.access}">ACCESO RESTRINGIDO</span></strong><br>
+            <span th:text="#{user.role}">Requiere rol</span>: 
+            <strong>USER</strong> 
+            <span th:text="#{user.or}">o</span> 
+            <strong>ADMIN</strong>
+        </div>
+        
+        <!-- Información del usuario si está logueado -->
+        <div th:if="${#authentication != null and #authentication.isAuthenticated()}">
+            <div class="user-info">
+                <p><strong>✅ <span th:text="#{welcome}">Bienvenido</span>:</strong> 
+                   <span th:text="${#authentication.name}">user</span></p>
+                <p><strong>🎯 <span th:text="#{user.role}">Rol</span>:</strong> 
+                   <span th:text="${#authentication.authorities}">ROLE_USER</span></p>
+            </div>
+        </div>
+        
+        <p><strong th:text="#{user.congrats}">¡Felicidades! Has accedido correctamente a una página protegida.</strong></p>
+        <p th:text="#{user.only}">Solo usuarios autenticados pueden ver esta página.</p>
+        
+        <div style="margin-top: 40px;">
+            <a href="/" class="btn">
+                🏠 <span th:text="#{button.home}">Volver al Inicio</span>
+            </a>
+            <a href="/admin" class="btn">
+                ⚙️ <span th:text="#{button.tryadmin}">Intentar acceder a Admin</span>
+            </a>
+            
+            <form style="display:inline;" th:action="@{/logout}" method="post">
+                <button type="submit" class="btn logout-btn">
+                    🚪 <span th:text="#{button.logout}">Cerrar Sesión</span>
+                </button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
