@@ -2,41 +2,166 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Página Pública</title>
+    <title id="page-title">Página Pública</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             max-width: 800px;
             margin: 50px auto;
             padding: 20px;
-            background-color: #e8f5e8;
+            background: linear-gradient(to right, #e3f2fd, #f3e5f5);
         }
         .container {
             background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             text-align: center;
         }
         h1 {
-            color: #2e7d32;
+            color: #4CAF50;
+            font-size: 2.5em;
+        }
+        .language-selector {
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .lang-btn {
+            padding: 8px 16px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            background: white;
+            color: #666;
+            cursor: pointer;
+            border: none;
+            font-weight: bold;
+        }
+        .lang-btn:hover {
+            background: #4CAF50;
+            color: white;
+        }
+        .lang-btn.active {
+            background: #4CAF50;
+            color: white;
+        }
+        .access {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-size: 1.2em;
         }
         .btn {
             display: inline-block;
-            padding: 10px 20px;
-            margin: 10px;
+            padding: 12px 25px;
             background: #4CAF50;
             color: white;
             text-decoration: none;
             border-radius: 5px;
+            margin: 10px;
+            font-weight: bold;
+        }
+        .btn:hover {
+            background: #45a049;
+        }
+        .description {
+            font-size: 1.1em;
+            color: #555;
+            margin: 25px 0;
+            line-height: 1.6;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🌐 ACCESO PUBLICO</h1>
-        <p>Esta pagina no requiere ninguna autenticacion.</p>
-        <a href="/" class="btn">Volver al menu anterior</a>
+        <!-- Selector de idioma -->
+        <div class="language-selector">
+            <button onclick="changeLanguage('es')" class="lang-btn" id="lang-es">🇪🇸 Español</button>
+            <button onclick="changeLanguage('en')" class="lang-btn" id="lang-en">🇺🇸 English</button>
+            <button onclick="changeLanguage('pt')" class="lang-btn" id="lang-pt">🇵🇹 Português</button>
+        </div>
+        
+        <h1 id="public-title">✅ PÁGINA PÚBLICA</h1>
+        
+        <div class="access" id="access-message">
+            <strong>ACCESO LIBRE</strong><br>
+            No se requiere autenticación
+        </div>
+        
+        <p class="description" id="description-text">
+            Esta página está disponible para todos los visitantes, sin necesidad de usuario o contraseña.
+        </p>
+        
+        <div>
+            <a href="/" class="btn" id="home-btn">🏠 Volver al Inicio</a>
+            <a href="/login" class="btn" id="login-btn">🔑 Ir a Login</a>
+        </div>
     </div>
+
+    <script>
+        // Diccionario de traducciones para la página pública
+        const publicTranslations = {
+            es: {
+                title: "✅ PÁGINA PÚBLICA",
+                access: "ACCESO LIBRE",
+                noauth: "No se requiere autenticación",
+                description: "Esta página está disponible para todos los visitantes, sin necesidad de usuario o contraseña.",
+                homeBtn: "🏠 Volver al Inicio",
+                loginBtn: "🔑 Ir a Login"
+            },
+            en: {
+                title: "✅ PUBLIC PAGE",
+                access: "FREE ACCESS",
+                noauth: "No authentication required",
+                description: "This page is available to all visitors, no username or password needed.",
+                homeBtn: "🏠 Back to Home",
+                loginBtn: "🔑 Go to Login"
+            },
+            pt: {
+                title: "✅ PÁGINA PÚBLICA",
+                access: "ACESSO LIVRE",
+                noauth: "Não requer autenticação",
+                description: "Esta página está disponível para todos os visitantes, sem necessidade de usuário ou senha.",
+                homeBtn: "🏠 Voltar ao Início",
+                loginBtn: "🔑 Ir para Login"
+            }
+        };
+
+        function changeLanguage(lang) {
+            // Guardar idioma en localStorage
+            localStorage.setItem('appLanguage', lang);
+            
+            // Actualizar todos los textos de la página pública
+            document.getElementById('public-title').textContent = publicTranslations[lang].title;
+            
+            // El mensaje de acceso tiene dos líneas: <strong> y <br>
+            let accessElement = document.getElementById('access-message');
+            accessElement.innerHTML = `<strong>${publicTranslations[lang].access}</strong><br>${publicTranslations[lang].noauth}`;
+            
+            document.getElementById('description-text').textContent = publicTranslations[lang].description;
+            document.getElementById('home-btn').textContent = publicTranslations[lang].homeBtn;
+            document.getElementById('login-btn').textContent = publicTranslations[lang].loginBtn;
+            
+            // Actualizar título de la pestaña del navegador
+            document.getElementById('page-title').textContent = publicTranslations[lang].title;
+            
+            // Actualizar botones activos
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById('lang-' + lang).classList.add('active');
+            
+            console.log('Idioma cambiado a:', lang);
+        }
+
+        // Cargar idioma guardado al iniciar
+        window.onload = function() {
+            const savedLang = localStorage.getItem('appLanguage') || 'es';
+            changeLanguage(savedLang);
+        };
+    </script>
 </body>
 </html>

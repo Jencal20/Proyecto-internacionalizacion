@@ -2,69 +2,195 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Página de Usuario</title>
+    <title id="page-title">Página de Usuario</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             max-width: 800px;
             margin: 50px auto;
             padding: 20px;
-            background-color: #fff3e0;
+            background: linear-gradient(to right, #fff3cd, #ffecb3);
         }
         .container {
             background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            text-align: center;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
         h1 {
             color: #ff9800;
+            border-left: 5px solid #ff9800;
+            padding-left: 15px;
+        }
+        .language-selector {
+            margin: 20px 0;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        .lang-btn {
+            padding: 5px 10px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            background: #f5f5f5;
+            cursor: pointer;
+        }
+        .lang-btn:hover {
+            background: #ff9800;
+            color: white;
+        }
+        .lang-btn.active {
+            background: #ff9800;
+            color: white;
+        }
+        .access-info {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .user-info {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
         }
         .btn {
             display: inline-block;
             padding: 10px 20px;
-            margin: 10px;
             background: #ff9800;
             color: white;
             text-decoration: none;
             border-radius: 5px;
+            margin-right: 10px;
         }
         .logout-form {
             display: inline;
         }
         .logout-btn {
             padding: 10px 20px;
-            background: #f44336;
+            background: #dc3545;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
         }
-        .user-info {
-            background: #f5f5f5;
-            padding: 15px;
-            border-radius: 5px;
-            margin: 20px 0;
-        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>👤 Página de Usuario</h1>
+        <!-- Selector de idioma -->
+        <div class="language-selector">
+            <button onclick="changeLanguage('es')" class="lang-btn" id="lang-es">🇪🇸 ES</button>
+            <button onclick="changeLanguage('en')" class="lang-btn" id="lang-en">🇺🇸 EN</button>
+            <button onclick="changeLanguage('pt')" class="lang-btn" id="lang-pt">🇵🇹 PT</button>
+        </div>
+
+        <h1 id="page-heading">👤 PÁGINA DE USUARIO</h1>
         
-        <div class="user-info">
-            <p><strong>Usuario:</strong> <span th:text="${#authentication.name}">user</span></p>
+        <div class="access-info" id="access-info">
+            <strong>🔐 ACCESO RESTRINGIDO</strong><br>
+            <span id="access-text">Requiere rol: USER o ADMIN</span>
         </div>
         
-        <p>Bienvenido a la zona de usuarios. Solo usuarios autenticados pueden ver esto.</p>
+        <!-- Información del usuario -->
+        <div class="user-info">
+            <p><strong id="welcome-label">Bienvenido:</strong> <span th:text="${#authentication.name}">user</span></p>
+            <p><strong id="role-label">Rol:</strong> <span th:text="${#authentication.authorities}">ROLE_USER</span></p>
+        </div>
         
-        <div>
-            <a href="/" class="btn">Volver al Inicio</a>
+        <p id="congrats-message">¡Felicidades! Has accedido correctamente a una página protegida.</p>
+        <p id="info-message">Solo usuarios autenticados pueden ver esta página.</p>
+        
+        <div style="margin-top: 30px;">
+            <a href="/" class="btn" id="home-btn">🏠 Volver al Inicio</a>
+            <a href="/admin" class="btn" id="admin-btn">⚙️ Intentar acceder a Admin</a>
+            
             <form class="logout-form" th:action="@{/logout}" method="post">
-                <button type="submit" class="logout-btn">Cerrar Sesión</button>
+                <button type="submit" class="logout-btn" id="logout-btn">🚪 Cerrar Sesión</button>
             </form>
         </div>
     </div>
+
+    <script>
+        // Traducciones para la página de usuario
+        const userTranslations = {
+            es: {
+                title: "Página de Usuario",
+                heading: "👤 PÁGINA DE USUARIO",
+                accessTitle: "🔐 ACCESO RESTRINGIDO",
+                accessText: "Requiere rol: USER o ADMIN",
+                welcome: "Bienvenido:",
+                role: "Rol:",
+                congrats: "¡Felicidades! Has accedido correctamente a una página protegida.",
+                info: "Solo usuarios autenticados pueden ver esta página.",
+                homeBtn: "🏠 Volver al Inicio",
+                adminBtn: "⚙️ Intentar acceder a Admin",
+                logout: "🚪 Cerrar Sesión"
+            },
+            en: {
+                title: "User Page",
+                heading: "👤 USER PAGE",
+                accessTitle: "🔐 RESTRICTED ACCESS",
+                accessText: "Requires role: USER or ADMIN",
+                welcome: "Welcome:",
+                role: "Role:",
+                congrats: "Congratulations! You have successfully accessed a protected page.",
+                info: "Only authenticated users can see this page.",
+                homeBtn: "🏠 Back to Home",
+                adminBtn: "⚙️ Try to access Admin",
+                logout: "🚪 Logout"
+            },
+            pt: {
+                title: "Página do Usuário",
+                heading: "👤 PÁGINA DO USUÁRIO",
+                accessTitle: "🔐 ACESSO RESTRITO",
+                accessText: "Requer papel: USER ou ADMIN",
+                welcome: "Bem-vindo:",
+                role: "Função:",
+                congrats: "Parabéns! Você acessou com sucesso uma página protegida.",
+                info: "Apenas usuários autenticados podem ver esta página.",
+                homeBtn: "🏠 Voltar ao Início",
+                adminBtn: "⚙️ Tentar acessar Admin",
+                logout: "🚪 Sair"
+            }
+        };
+
+        function changeLanguage(lang) {
+            localStorage.setItem('appLanguage', lang);
+            
+            // Actualizar título de la pestaña
+            document.getElementById('page-title').textContent = userTranslations[lang].title;
+            
+            // Actualizar encabezado
+            document.getElementById('page-heading').textContent = userTranslations[lang].heading;
+            
+            // Actualizar bloque de acceso (tiene dos partes: <strong> y <span>)
+            document.getElementById('access-info').innerHTML = 
+                `<strong>${userTranslations[lang].accessTitle}</strong><br>
+                 <span>${userTranslations[lang].accessText}</span>`;
+            
+            // Etiquetas
+            document.getElementById('welcome-label').textContent = userTranslations[lang].welcome;
+            document.getElementById('role-label').textContent = userTranslations[lang].role;
+            document.getElementById('congrats-message').textContent = userTranslations[lang].congrats;
+            document.getElementById('info-message').textContent = userTranslations[lang].info;
+            
+            // Botones
+            document.getElementById('home-btn').textContent = userTranslations[lang].homeBtn;
+            document.getElementById('admin-btn').textContent = userTranslations[lang].adminBtn;
+            document.getElementById('logout-btn').textContent = userTranslations[lang].logout;
+            
+            // Resaltar botón activo
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('lang-' + lang).classList.add('active');
+        }
+
+        // Cargar idioma guardado
+        window.onload = function() {
+            const savedLang = localStorage.getItem('appLanguage') || 'es';
+            changeLanguage(savedLang);
+        };
+    </script>
 </body>
 </html>
