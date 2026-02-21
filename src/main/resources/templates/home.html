@@ -99,9 +99,10 @@
         
         <!-- Info de usuario (solo visible si está logueado) -->
         <div th:if="${#authentication != null and #authentication.isAuthenticated()}" class="user-info">
-            <span>👤 <span th:text="${#authentication.name}">usuario</span></span>
+            <span id="user-greeting">👤 <span th:text="${#authentication.name}">usuario</span></span>
             <form th:action="@{/logout}" method="post">
-                <button type="submit" class="logout-btn">Cerrar Sesión</button>
+                <!-- EL BOTÓN DE LOGOUT AHORA TIENE ID -->
+                <button type="submit" class="logout-btn" id="logout-button">Cerrar Sesión</button>
             </form>
         </div>
         
@@ -125,14 +126,16 @@
     </div>
 
     <script>
-        // Diccionario de traducciones
+        // Diccionario de traducciones - AHORA INCLUYE "LOGOUT"
         const homeTranslations = {
             es: {
-                welcome: "Bienvenido al Proyecto de internacionalizacion",
+                welcome: "Bienvenido al Sistema de Seguridad",
                 public: "🌐 Página Pública",
                 user: "👤 Página de Usuario",
                 admin: "⚙️ Página de Admin",
                 login: "🔑 Iniciar Sesión",
+                logout: "Cerrar Sesión",  // <-- NUEVO: traducción para logout
+                greeting: "👤",             // <-- Prefijo para el saludo
                 footer: "Spring Boot + Seguridad + Internacionalización"
             },
             en: {
@@ -141,6 +144,8 @@
                 user: "👤 User Page",
                 admin: "⚙️ Admin Page",
                 login: "🔑 Login",
+                logout: "Logout",            // <-- NUEVO
+                greeting: "👤",
                 footer: "Spring Boot + Security + Internationalization"
             },
             pt: {
@@ -149,34 +154,57 @@
                 user: "👤 Página do Usuário",
                 admin: "⚙️ Página do Admin",
                 login: "🔑 Iniciar Sessão",
+                logout: "Sair",               // <-- NUEVO
+                greeting: "👤",
                 footer: "Spring Boot + Segurança + Internacionalização"
             }
         };
 
         function changeLanguage(lang) {
+            // Guardar idioma en localStorage
             localStorage.setItem('appLanguage', lang);
             
-            // Actualizar textos
+            // 1. Actualizar elementos que SIEMPRE existen
             document.getElementById('welcome-message').textContent = homeTranslations[lang].welcome;
             document.getElementById('public-link').textContent = homeTranslations[lang].public;
             document.getElementById('user-link').textContent = homeTranslations[lang].user;
             document.getElementById('admin-link').textContent = homeTranslations[lang].admin;
             
+            // 2. Actualizar botón de login (si existe)
             let loginLink = document.getElementById('login-link');
             if (loginLink) {
                 loginLink.textContent = homeTranslations[lang].login;
             }
             
+            // 3. ACTUALIZAR BOTÓN DE LOGOUT (si existe)
+            let logoutButton = document.getElementById('logout-button');
+            if (logoutButton) {
+                logoutButton.textContent = homeTranslations[lang].logout;
+            }
+            
+            // 4. Actualizar saludo de usuario (si existe)
+            let userGreeting = document.getElementById('user-greeting');
+            if (userGreeting) {
+                // Mantiene el nombre de usuario pero actualiza el emoji
+                let userName = userGreeting.textContent.replace(/[^a-zA-Z0-9@.]/g, '').trim();
+                userGreeting.textContent = homeTranslations[lang].greeting + ' ' + userName;
+            }
+            
+            // 5. Actualizar footer
             document.getElementById('footer-text').textContent = homeTranslations[lang].footer;
             
-            // Actualizar botones activos
+            // 6. Actualizar botones activos
             document.querySelectorAll('.lang-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
             document.getElementById('lang-' + lang).classList.add('active');
+            
+            // Log de depuración
+            console.log('Idioma cambiado a:', lang);
+            console.log('Botón logout actualizado a:', homeTranslations[lang].logout);
         }
 
-        // Cargar idioma guardado
+        // Cargar idioma guardado al iniciar
         window.onload = function() {
             const savedLang = localStorage.getItem('appLanguage') || 'es';
             changeLanguage(savedLang);
